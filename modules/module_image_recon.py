@@ -106,7 +106,8 @@ def calculate_W(A, alpha_meas=0.1, alpha_spatial=0.01, BRAIN_ONLY = False, DIREC
     
     
     if DIRECT:
-        C_meas = np.diag(C_meas)
+        if C_meas_flag:
+            C_meas = np.diag(C_meas)
         W_xr, D, F = _calculate_W_direct(A, alpha_meas=alpha_meas, alpha_spatial=alpha_spatial, 
                                         BRAIN_ONLY=BRAIN_ONLY, 
                                         C_meas_flag=C_meas_flag, C_meas=C_meas, D=D, F=F)
@@ -151,7 +152,8 @@ def _calculate_W_direct(A, alpha_meas=0.1, alpha_spatial=0.01, BRAIN_ONLY=False,
             D = D.values
             F = F.values
             
-        lambda_meas = alpha_meas * max(np.diag(F))
+        max_eig = np.max(np.linalg.eigvals(F))
+        lambda_meas = alpha_meas * max_eig
         
         if C_meas_flag:                                                               
             W = D @ np.linalg.inv(F  + lambda_meas * C_meas )
@@ -823,7 +825,7 @@ def plot_image_recon( X, head, shape, iax,clim=(0,1), flag_hbx='hbo_brain', view
     if flag_hbx == 'hbo_brain': # hbo brain 
         surf = cdc.VTKSurface.from_trimeshsurface(head.brain)
         surf = pv.wrap(surf.mesh)
-        clim=(-0.6*X_hbo_brain.max(), 0.7*X_hbo_brain.max())
+        # clim=(-0.6*X_hbo_brain.max(), 0.7*X_hbo_brain.max())
         #clim=(-X_hbo_brain.max(), X_hbo_brain.max())
         p0.add_mesh(surf, scalars=X_hbo_brain, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
@@ -831,7 +833,7 @@ def plot_image_recon( X, head, shape, iax,clim=(0,1), flag_hbx='hbo_brain', view
     elif flag_hbx == 'hbr_brain': # hbr brain
         surf = cdc.VTKSurface.from_trimeshsurface(head.brain)
         surf = pv.wrap(surf.mesh)   
-        clim=(-0.6*X_hbr_brain.max(), 0.7*X_hbr_brain.max())
+        # clim=(-0.6*X_hbr_brain.max(), 0.7*X_hbr_brain.max())
         #clim=(-X_hbr_brain.max(), X_hbr_brain.max())
         p0.add_mesh(surf, scalars=X_hbr_brain, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
@@ -839,7 +841,7 @@ def plot_image_recon( X, head, shape, iax,clim=(0,1), flag_hbx='hbo_brain', view
     elif flag_hbx == 'hbo_scalp': # hbo scalp
         surf = cdc.VTKSurface.from_trimeshsurface(head.scalp)
         surf = pv.wrap(surf.mesh)
-        clim=(-0.6*X_hbo_brain.max(), 0.7*X_hbo_brain.max())
+        # clim=(-0.6*X_hbo_brain.max(), 0.7*X_hbo_brain.max())
         #clim=(-X_hbo_brain.max(), X_hbo_brain.max())
         p0.add_mesh(surf, scalars=X_hbo_scalp, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
@@ -847,7 +849,7 @@ def plot_image_recon( X, head, shape, iax,clim=(0,1), flag_hbx='hbo_brain', view
     elif flag_hbx == 'hbr_scalp': # hbr scalp
         surf = cdc.VTKSurface.from_trimeshsurface(head.scalp)
         surf = pv.wrap(surf.mesh)
-        clim=(-0.6*X_hbr_brain.max(), 0.7*X_hbr_brain.max())
+        # clim=(-0.6*X_hbr_brain.max(), 0.7*X_hbr_brain.max())
         #clim=(-X_hbr_brain.max(), X_hbr_brain.max())
         p0.add_mesh(surf, scalars=X_hbr_scalp, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
