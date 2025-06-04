@@ -775,12 +775,8 @@ def save_image_results(X_matrix, X_matrix_name, save_path, trial_type_img, cfg_i
     
 
 #%%
-def plot_image_recon( X, head, shape, iax,clim=(0,1), flag_hbx='hbo_brain', view_position='superior', p0 = None, title_str = None, off_screen= True ):
-    # pos_names = ['superior', 'left']
+def plot_image_recon( X, head, shape, iax, clim=(0,1), flag_hbx='hbo_brain', view_position='superior', p0 = None, title_str = None, off_screen= True ):
 
-    #
-    # Plot the results
-    #
     cmap = p.get_cmap("jet", 256)
     new_cmap_colors = np.vstack((cmap(np.linspace(0, 1, 256))))
     custom_cmap = ListedColormap(new_cmap_colors)
@@ -827,28 +823,24 @@ def plot_image_recon( X, head, shape, iax,clim=(0,1), flag_hbx='hbo_brain', view
     if flag_hbx == 'hbo_brain': # hbo brain 
         surf = cdc.VTKSurface.from_trimeshsurface(head.brain)
         surf = pv.wrap(surf.mesh)
-        clim=(-X_hbo_brain.max(), X_hbo_brain.max())
         p0.add_mesh(surf, scalars=X_hbo_brain, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
 
     elif flag_hbx == 'hbr_brain': # hbr brain
         surf = cdc.VTKSurface.from_trimeshsurface(head.brain)
         surf = pv.wrap(surf.mesh)   
-        clim=(-X_hbr_brain.max(), X_hbr_brain.max())
         p0.add_mesh(surf, scalars=X_hbr_brain, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
 
     elif flag_hbx == 'hbo_scalp': # hbo scalp
         surf = cdc.VTKSurface.from_trimeshsurface(head.scalp)
         surf = pv.wrap(surf.mesh)
-        clim=(-X_hbo_brain.max(), X_hbo_brain.max())
         p0.add_mesh(surf, scalars=X_hbo_scalp, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
 
     elif flag_hbx == 'hbr_scalp': # hbr scalp
         surf = cdc.VTKSurface.from_trimeshsurface(head.scalp)
         surf = pv.wrap(surf.mesh)
-        clim=(-X_hbr_brain.max(), X_hbr_brain.max())
         p0.add_mesh(surf, scalars=X_hbr_scalp, cmap=custom_cmap, clim=clim, show_scalar_bar=show_scalar_bar, nan_color=(0.9,0.9,0.9), smooth_shading=True )
         p0.camera_position = pos
 
